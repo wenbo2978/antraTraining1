@@ -12,6 +12,13 @@
 // console.log(typeof undefined);
 // console.log(typeof null); 
 
+// const str = "sa";
+// console.log(typeof str);
+
+// const flag = true;
+
+// console.log(typeof flag);
+
 // ------- object/ reference Type
 // Array, Function, Object, Date, Regex
 
@@ -21,6 +28,11 @@
 // const a = new Array()
 // console.log(typeof a)
 // console.log(a)
+
+// const sy = Symbol('xxx');
+// console.log(typeof sy);
+// console.log(sy);
+
 
 
 // ------- heap stack
@@ -79,6 +91,7 @@
 // let res = null + "5";
 // let res = null + 5;
 // let res = 12 / "2i"
+// let res = 12 / "2"
 // let res = + "123"
 // let res = + false
 // let res = + "abc"
@@ -128,8 +141,8 @@
 // console.log(Boolean(-0))           // false
 // console.log(Boolean(NaN))          // false
 
-console.log(typeof NaN)
-console.log(NaN === NaN)
+// console.log(typeof NaN)
+// console.log(NaN === NaN)
 // console.log(Boolean(null))         // false
 // console.log(Boolean(undefined))    // false
 // console.log(Boolean(false))        // false
@@ -276,3 +289,23 @@ console.log(NaN === NaN)
 // function named() {
 //     console.log('hello');
 // }
+
+
+
+// function foo() {
+//   console.log(a);
+//   if (true) {
+//     var a = 5;
+//   }
+//   console.log(a);
+// }
+// foo();
+
+// function foo() {
+//   console.log(a);
+//   let a = 5;
+//   console.log(a);
+// }
+// foo();
+
+// console.log(null == undefined);  //true
