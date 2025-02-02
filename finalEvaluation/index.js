@@ -159,6 +159,8 @@ const Controller = ((view, model) => {
 
   let gameIntervalId;
 
+  let snakeIntervalId;
+
   const gameStart = () => {
     const myGameId = setInterval(() => {
       if(state.count < 3){
@@ -197,13 +199,31 @@ const Controller = ((view, model) => {
     return myGameId
   }
 
-  const GameReset = (id) => {
+  const snakeController = () => {
+    const myId = setInterval(() => {
+      const randomId = Math.floor(Math.random() * 12)
+      console.log(randomId)
+      document.getElementById('icon_' + randomId).src = "./mine.jpeg"
+      setTimeout(() => {
+        document.getElementById('icon_' + randomId).src = "./mole.jpeg"
+      }, 2000)
+    }, 1000)
+    return myId
+  }
+
+  const GameReset = (id, id2) => {
+    const timer = state.getTimer();
+    clearInterval(timer.id)
+    state.reset()
+    domSelector.start_button.innerHTML = "Click me to start!"
     clearInterval(id)
+    clearInterval(id2)
 
   }
 
   const bootstrap = () => {
     render(domSelector.task_container, createTemp(12))
+    // document.getElementById('icon_' + 0).src = "./mine.jpeg"
   }
 
   //add eventListener
@@ -211,25 +231,26 @@ const Controller = ((view, model) => {
   domSelector.start_button.addEventListener('click', (event) => {
     if(state.gameState === 'off'){
       gameIntervalId = gameStart();
+      snakeIntervalId = snakeController();
       state.startGame();
       domSelector.start_button.innerHTML = "Reset"
       const timeId = setInterval(() => {
         const timer = state.printTime();
         if(timer.timeLeft < 0){
           alert("Time is over")
-          GameReset(gameIntervalId)
-          clearInterval(timer.id)
-          state.reset()
-          domSelector.start_button.innerHTML = "Click me to start!"
+          GameReset(gameIntervalId, snakeIntervalId)
+          // clearInterval(timer.id)
+          // state.reset()
+          // domSelector.start_button.innerHTML = "Click me to start!"
         }
       }, 1000)
       state.setTimer({id: timeId, timeLeft: 30})
     }else{
-      const timer = state.getTimer();
-      clearInterval(timer.id)
-      state.reset()
-      domSelector.start_button.innerHTML = "Click me to start!"
-      GameReset(gameIntervalId)
+      // const timer = state.getTimer();
+      // clearInterval(timer.id)
+      // state.reset()
+      // domSelector.start_button.innerHTML = "Click me to start!"
+      GameReset(gameIntervalId, snakeIntervalId)
       
       
     }
@@ -240,21 +261,42 @@ const Controller = ((view, model) => {
     if(state.gameState === 'on'){
       
       const list = event.target.id.split('')
-      //console.log(list)
-      if(list[0] === 'i'){
-        state.addScore()
-        let clickId;
-        if(list.length === 6){
-          clickId = Number(list[5])
-        }else{
-          clickId = Number(list[5]) * 10 + Number(list[6])
+      //console.log(event.target.src.split('/'))
+      const list2 = event.target.src.split('/')
+      if(list2[list2.length - 1] === 'mine.jpeg'){
+        //alert('first')
+        for(let i = 0; i < 12; i ++){
+          
+          document.getElementById('icon_' + i).classList.remove('icon_hidden')
+          document.getElementById('icon_' + i).src = './mine.jpeg'
+          // const doc = document.getElementById('icon_' + i)
+          // console.log(doc)
         }
-        //console.log(clickId)
-        const obj = state.getMoleByIndex(clickId);
-        clearTimeout(obj.timeId)
-        obj.display = 0
-        obj.timeId = -1
-        document.getElementById("icon_" + clickId).classList.add('icon_hidden')
+        setTimeout(() => {
+          alert('game over !!!')
+          for(let i = 0; i < 12; i ++){
+            document.getElementById('icon_' + i).classList.add('icon_hidden')
+            document.getElementById('icon_' + i).src = './mole.jpeg'
+          }
+          GameReset(gameIntervalId, snakeIntervalId)
+        }, 0)
+      }else{
+      
+        if(list[0] === 'i'){
+          state.addScore()
+          let clickId;
+          if(list.length === 6){
+            clickId = Number(list[5])
+          }else{
+            clickId = Number(list[5]) * 10 + Number(list[6])
+          }
+          //console.log(clickId)
+          const obj = state.getMoleByIndex(clickId);
+          clearTimeout(obj.timeId)
+          obj.display = 0
+          obj.timeId = -1
+          document.getElementById("icon_" + clickId).classList.add('icon_hidden')
+        }
       }
     }
   })
